@@ -12,6 +12,7 @@ class MainViewController: UIViewController, UITextFieldDelegate {
     var operand2: Double?
     var temporaryString: String? = "0"
     var operationOnHold: KeyAction?
+    var operationOnHoldTemporary: KeyAction?
     
     @IBOutlet weak var calculatorKeyboardCollectionView: UICollectionView!
     @IBOutlet weak var calculatorTextField: UITextField!
@@ -31,7 +32,8 @@ class MainViewController: UIViewController, UITextFieldDelegate {
         calculatorTextField.font = UIFont.systemFont(ofSize: calculatorKeyboardCollectionView.bounds.width / 100 * 25, weight: UIFont.Weight.thin)
         calculatorTextField.tintColor = UIColor.clear
         calculatorTextField.borderStyle = .none
-        calculatorView.topAnchor.constraint(equalTo: view.topAnchor, constant: screenSize.height / 4).isActive = true
+        calculatorView.topAnchor.constraint(equalTo: view.topAnchor, constant: screenSize.height / 4.5).isActive = true
+        calculatorKeyboardCollectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: screenSize.height / 2.6).isActive = true
         calculatorKeyboardCollectionView.translatesAutoresizingMaskIntoConstraints = false
         calculatorView.translatesAutoresizingMaskIntoConstraints = false
         calculatorStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -58,7 +60,11 @@ class MainViewController: UIViewController, UITextFieldDelegate {
     func onMathActionClick(keyAction: KeyAction? = nil, keyType: KeyType? = nil){
         if let _ = keyAction, let _ = keyType {
             operand1 = Double(temporaryString!)
+            self.operationOnHoldTemporary = keyAction!
+            self.operationOnHold = keyAction!
+
         }
+        
         
         for subview in calculatorKeyboardCollectionView.subviews{
             if let cell = subview as? CalculatorKeyCell {
@@ -67,79 +73,147 @@ class MainViewController: UIViewController, UITextFieldDelegate {
                     let color = getKeyColor(type: cell.type!)
                     cell.contentView.backgroundColor = color
                     cell.backgroundColor = color
-                    operationOnHold = cell.keyAction
                 }
             }
         }
     }
     
-    func handleKeyActionClick(type: KeyAction, value: Int? = nil) {
+    func handleKeyActionClick(type: KeyAction, value: Int? = nil, keyType: KeyType? = nil) {
         switch type {
         case .Percent:
+            if temporaryString! == "Error"{
+                return
+            }
+
             let valueToCast = Double(temporaryString!)
             if temporaryString! != "0" {
                 calculator.calculatePercentage(value: valueToCast!, percentage: 1)
-                temporaryString! = String(format: "%.2f", calculator.result!)
+                temporaryString! = String(format: "%.3f", calculator.result!)
+                calculatorTextField.text = temporaryString!
+                operand1 = Double(temporaryString!)
+                operand2 = nil
+            }
+
+        case .OppositeSign:
+            if temporaryString! == "Error"{
+                return
+            }
+
+            let valueToCast = Double(temporaryString!)
+            let isInteger = floor(valueToCast!) == valueToCast!
+            
+            if operationOnHoldTemporary != nil && operationOnHoldTemporary != .Calculate {
+                temporaryString! = "-0"
+                calculatorTextField.text = temporaryString!
+            } else if temporaryString! == "0" {
+                temporaryString! = "-0"
+                calculatorTextField.text = temporaryString!
+            } else {
+                if(isInteger){
+                    temporaryString! = String(Int(valueToCast!) * -1)
+                } else {
+                    temporaryString! = String(valueToCast! * -1.0)
+                }
                 calculatorTextField.text = temporaryString!
             }
             
-        case .OppositeSign:
-            let valueToCast = Double(temporaryString!)
-            let isInteger = floor(valueToCast!) == valueToCast!
-            if(isInteger){
-                temporaryString! = String(Int(valueToCast!) * -1)
-            } else {
-                temporaryString! = String(valueToCast! * -1.0)
-            }
-            calculatorTextField.text = temporaryString!
+            
             
         case .Coma:
-            print("Coma")
+            if temporaryString! == "Error" || temporaryString!.contains("."){
+                return
+            }
+
+            temporaryString! += "."
+            calculatorTextField.text = temporaryString!
             
         case .Clear:
             temporaryString = "0"
             operand1 = nil
             operand2 = nil
-            operationOnHold = nil
+            operationOnHoldTemporary = nil
             onMathActionClick()
             calculatorTextField.text = temporaryString
             
         case .Calculate:
+            if temporaryString! == "Error" || operand2 == nil{
+                return
+            }
+
             switch operationOnHold {
             case .Add:
                 calculator.add(value1: operand1!, value2: operand2!)
                 temporaryString! = String(calculator.result!)
+                operand1 = calculator.result!
+                operand2 = nil
             case .Divide:
-                calculator.division(value1: operand1!, value2: operand2!)
-                temporaryString! = String(calculator.result!)
+                print(operand2!)
+                if String(operand2!) == "0.0" || String(operand2!) == "-0.0"{
+                    temporaryString! = "Error"
+                    operand1 = 0.0
+                    operand2 = nil
+                } else{
+                    calculator.division(value1: operand1!, value2: operand2!)
+                    temporaryString! = String(calculator.result!)
+                    operand1 = calculator.result!
+                    operand2 = nil
+                }
             case .Multiply:
                 calculator.multiplication(value1: operand1!, value2: operand2!)
                 temporaryString! = String(calculator.result!)
+                operand1 = calculator.result!
+                operand2 = nil
             case .Subtract:
                 calculator.subtraction(value1: operand1!, value2: operand2!)
                 temporaryString! = String(calculator.result!)
+                operand1 = calculator.result!
+                operand2 = nil
             default:
-                print("default")
+                print("default Calculate \(operationOnHold!)")
+            }
+            if temporaryString! != "Error" {
+                let isInteger = floor(calculator.result!) == calculator.result!
+                if isInteger {
+                    temporaryString! = String(Int(calculator.result!))
+                    calculatorTextField.text = temporaryString!
+                } else {
+                    temporaryString! = String(format: "%.3f", calculator.result!)
+                    calculatorTextField.text = temporaryString!
+                }
+            } else {
+                calculatorTextField.text = temporaryString!
+            }
+                        
+        case .Number:
+             
+            if temporaryString! == "Error"{
+                return
             }
             
-        case .Number:
-            if temporaryString!.count < 9 {
-                
-                    
+            if temporaryString!.count <= 8 || temporaryString?.count == 9 && operationOnHoldTemporary != nil{
                     var valueString: String?
                     if let value = value{
                         valueString = String(value)
-                        print(valueString!)
-                        if let _ = operationOnHold {
-                            temporaryString! = "0"
-                            onMathActionClick()
-                            self.operationOnHold = nil
+                        if let _ = operationOnHoldTemporary {
+                            if temporaryString! != "-0" {
+                                temporaryString! = "0"
+                                onMathActionClick()
+                                self.operationOnHoldTemporary = nil
+                            } else {
+                                print("else")
+                                onMathActionClick()
+                                self.operationOnHoldTemporary = nil
+                            }
                         }
 
-                        
                         if let _ = operand1 {
+                            print(temporaryString!)
                             if(temporaryString! == "0"){
                                 temporaryString! = valueString!
+                                operand2 = Double(temporaryString!)
+                            } else if (temporaryString! == "-0"){
+                                temporaryString! = "-"
+                                temporaryString! += valueString!
                                 operand2 = Double(temporaryString!)
                             } else {
                                 temporaryString! += valueString!
@@ -148,16 +222,18 @@ class MainViewController: UIViewController, UITextFieldDelegate {
                         } else {
                             if(temporaryString! == "0"){
                                 temporaryString! = valueString!
-                            } else {
+                            } else if (temporaryString! == "-0"){
+                                temporaryString! = "-"
+                                temporaryString! += valueString!
+                                operand1 = Double(temporaryString!)
+                            }
+                            else {
                                 temporaryString! += valueString!
                             }
                         }
                         calculatorTextField.text = temporaryString
                         print(temporaryString!)
-                        
-                        
                     }
-                
             }
         default:
             print("default")
@@ -191,25 +267,29 @@ extension MainViewController: UICollectionViewDelegate {
     
 }
 
+extension MainViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 90, height: 90)
+    }
+}
+
 extension MainViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return keys.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 90, height: 90)
-    }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CalculatorKeyCell
         let item = keys[indexPath.row]
         let cellWidth = calculatorKeyboardCollectionView.bounds.width / 4 - 10
         let title = item["title"] as? String
+        
         switch title {
             case "0":
                 cell.cellHeight = cellWidth
-                cell.cellWidth = (calculatorKeyboardCollectionView.bounds.width / 4) - 10
-//            cell.cellWidth = (calculatorKeyboardCollectionView.bounds.width / 4) * 2 - 0.5
+//                cell.cellWidth = (calculatorKeyboardCollectionView.bounds.width / 4) - 10
+                cell.cellWidth = (calculatorKeyboardCollectionView.bounds.width / 4) * 2 - 0.5
                 cell.label.textAlignment = .left
                 cell.label.text = item["title"] as? String
 
@@ -228,8 +308,7 @@ extension MainViewController: UICollectionViewDataSource {
                 cell.label.text = item["title"] as? String
                 cell.label.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor).isActive = true
             }
-        
-        
+
         let type = item["type"] as? KeyType
         let action = item["actionType"] as? KeyAction
         let value = item["value"] as? Int
@@ -260,7 +339,7 @@ final class CalculatorKeyCell: UICollectionViewCell {
     var cellHeight: CGFloat!
     var keyAction: KeyAction!
     var type: KeyType!
-    var onAction: ((_ actionType: KeyAction, _ value: Int?) -> Void)?
+    var onAction: ((_ actionType: KeyAction, _ value: Int?, _ keyType: KeyType?) -> Void)?
     var onMathAction: ((_ keyAction: KeyAction,_ keyType: KeyType) -> Void)?
     
     var cellWidth: CGFloat!{
@@ -311,11 +390,10 @@ final class CalculatorKeyCell: UICollectionViewCell {
         if type == .MathAction {
             if sender.state == .began {
                 if keyAction == .Calculate {
-                    print(keyAction)
-                    onAction!(keyAction, nil)
+                    onAction!(keyAction, nil, type)
                 }
                 onMathAction!(keyAction, type)
-                contentView.backgroundColor = UIColor(cgColor: CGColor(red: 1, green: 1, blue: 1, alpha: 1))
+                contentView.backgroundColor = UIColor(cgColor: CGColor(red: 1, green: 1, blue: 1, alpha: 0.7))
                 label.textColor = .systemOrange
             } else if sender.state == .ended {
                 if keyAction == .Calculate {
@@ -326,9 +404,9 @@ final class CalculatorKeyCell: UICollectionViewCell {
         } else {
             if sender.state == .began {
                 if let onAction = onAction, let value = value {
-                    onAction(keyAction, value)
+                    onAction(keyAction, value, nil)
                 } else {
-                    onAction!(keyAction, nil)
+                    onAction!(keyAction, nil, nil)
                 }
 
                 contentView.backgroundColor = UIColor(cgColor: CGColor(red: 1, green: 1, blue: 1, alpha: 0.5))

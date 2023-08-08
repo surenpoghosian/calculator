@@ -12,26 +12,26 @@
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="MainViewController" customModule="Calculator" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                    <view key="view" contentMode="top" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oG6-1D-yse">
-                                <rect key="frame" x="0.0" y="109" width="393" height="709"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oG6-1D-yse">
+                                <rect key="frame" x="0.0" y="59" width="393" height="759"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="gDg-7Q-DHu">
-                                        <rect key="frame" x="8" y="8" width="377" height="753"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="gDg-7Q-DHu">
+                                        <rect key="frame" x="8" y="8" width="377" height="743"/>
                                         <subviews>
                                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3je-Dn-9Ab">
-                                                <rect key="frame" x="0.0" y="0.0" width="377" height="130"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="377" height="70"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="70" id="HcF-fV-LrR"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" weight="thin" pointSize="90"/>
                                                 <textInputTraits key="textInputTraits"/>
                                             </textField>
-                                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="F1D-OZ-oRh">
-                                                <rect key="frame" x="0.0" y="130" width="377" height="623"/>
+                                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="F1D-OZ-oRh">
+                                                <rect key="frame" x="0.0" y="70" width="377" height="673"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="DNw-HI-fK8">
                                                     <size key="itemSize" width="128" height="128"/>
@@ -45,29 +45,29 @@
                                         <constraints>
                                             <constraint firstItem="F1D-OZ-oRh" firstAttribute="trailing" secondItem="gDg-7Q-DHu" secondAttribute="trailingMargin" id="4Sh-ho-Nd7"/>
                                             <constraint firstItem="F1D-OZ-oRh" firstAttribute="bottom" secondItem="gDg-7Q-DHu" secondAttribute="bottomMargin" id="4hW-U6-GVl"/>
-                                            <constraint firstItem="3je-Dn-9Ab" firstAttribute="top" secondItem="gDg-7Q-DHu" secondAttribute="top" id="4jU-Zh-sD3"/>
                                             <constraint firstAttribute="trailing" secondItem="3je-Dn-9Ab" secondAttribute="trailing" id="6A6-Tp-Ww6"/>
-                                            <constraint firstItem="F1D-OZ-oRh" firstAttribute="top" secondItem="gDg-7Q-DHu" secondAttribute="top" constant="130" id="CC3-4r-AqU"/>
                                             <constraint firstItem="F1D-OZ-oRh" firstAttribute="leading" secondItem="gDg-7Q-DHu" secondAttribute="leadingMargin" id="LiG-NQ-xRo"/>
-                                            <constraint firstItem="3je-Dn-9Ab" firstAttribute="leading" secondItem="gDg-7Q-DHu" secondAttribute="leading" id="p32-Mz-zXg"/>
+                                            <constraint firstItem="3je-Dn-9Ab" firstAttribute="leading" secondItem="gDg-7Q-DHu" secondAttribute="leadingMargin" id="LiR-VB-z9Z"/>
+                                            <constraint firstItem="3je-Dn-9Ab" firstAttribute="top" secondItem="gDg-7Q-DHu" secondAttribute="topMargin" id="Uab-Xh-HCA"/>
+                                            <constraint firstItem="3je-Dn-9Ab" firstAttribute="trailing" secondItem="gDg-7Q-DHu" secondAttribute="trailingMargin" id="hsP-Hk-3rk"/>
                                         </constraints>
                                     </stackView>
                                 </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstItem="gDg-7Q-DHu" firstAttribute="top" secondItem="oG6-1D-yse" secondAttribute="topMargin" id="BSY-aM-5p0"/>
-                                    <constraint firstAttribute="trailingMargin" secondItem="gDg-7Q-DHu" secondAttribute="trailing" id="ITe-em-BiV"/>
-                                    <constraint firstItem="gDg-7Q-DHu" firstAttribute="leading" secondItem="oG6-1D-yse" secondAttribute="leadingMargin" id="dgu-2R-kiS"/>
-                                    <constraint firstAttribute="bottomMargin" secondItem="gDg-7Q-DHu" secondAttribute="bottom" id="pI1-37-aKf"/>
+                                    <constraint firstItem="gDg-7Q-DHu" firstAttribute="bottom" secondItem="oG6-1D-yse" secondAttribute="bottomMargin" id="IdW-Yo-eDT"/>
+                                    <constraint firstItem="gDg-7Q-DHu" firstAttribute="leading" secondItem="oG6-1D-yse" secondAttribute="leadingMargin" id="KgU-3z-A45"/>
+                                    <constraint firstItem="gDg-7Q-DHu" firstAttribute="trailing" secondItem="oG6-1D-yse" secondAttribute="trailingMargin" id="dyq-KF-fVV"/>
+                                    <constraint firstItem="gDg-7Q-DHu" firstAttribute="top" secondItem="oG6-1D-yse" secondAttribute="topMargin" id="zd9-dZ-dTO"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="oG6-1D-yse" secondAttribute="trailing" id="Dbr-wP-ivv"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="oG6-1D-yse" secondAttribute="bottom" id="h8f-aF-VF2"/>
-                            <constraint firstItem="oG6-1D-yse" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="q2d-CU-PNx"/>
+                            <constraint firstItem="oG6-1D-yse" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="PPt-Bs-pVy"/>
+                            <constraint firstItem="oG6-1D-yse" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="TBC-r2-pO2"/>
+                            <constraint firstItem="oG6-1D-yse" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="dcX-8a-Pi6"/>
+                            <constraint firstItem="oG6-1D-yse" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="kfz-LV-aLa"/>
                         </constraints>
                     </view>
                     <connections>

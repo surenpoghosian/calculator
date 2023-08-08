@@ -12,7 +12,6 @@ enum OperationType {
     case subtraction
     case multiplication
     case division
-    case sqrt
 }
 
 struct MathOperation {
@@ -34,8 +33,6 @@ final public class Calculator {
             self.result = mathOperation.operand1 * mathOperation.operand2
         case .subtraction:
             self.result = mathOperation.operand1 - mathOperation.operand2
-        case .sqrt:
-            self.result = sqrt(mathOperation.operand1)
         }
     }    
     
@@ -69,38 +66,6 @@ final public class Calculator {
     
     func clearResult(){
         self.result = 0;
-    }
-    
-    
-    func calculateAverage(values: [Double]){
-        for i in 0...values.count-2{
-            performOperation(MathOperation(operand1: values[i], operand2: values[i+1], operationType: .addition))
-        }
-        
-        performOperation(MathOperation(operand1: result!, operand2: Double(values.count), operationType: .division))
-        
-    }
-    
-
-    func calculateFactorial(value: Int){
-        result = Double(value)
-        for i in stride(from: value-1, to: 1, by: -1){
-            performOperation(MathOperation(operand1: Double(result!), operand2: Double(i), operationType: .multiplication))
-        }
-    }
-    
-
-    func calculatePower(base: Double, exponent: Double){
-        result = base
-        for _ in 0...Int(exponent)-2 {
-            performOperation(MathOperation(operand1: result!, operand2: base, operationType: .multiplication))
-        }
-    }
-    
-
-    func calculateSquareRoot(value: Double){
-        let mathOperation = MathOperation(operand1: 9, operand2: 0.0, operationType: .sqrt)
-        performOperation(mathOperation)
     }
 
     func calculatePercentage(value: Double, percentage: Double){
